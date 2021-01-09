@@ -4,7 +4,9 @@ import com.github.gustavovitor.integracoes_api.api.domain.auth_user.AuthUser;
 import com.github.gustavovitor.integracoes_api.api.service.auth_user.AuthUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,5 +23,10 @@ public class PublicAuthUserResource {
     @PostMapping("/register")
     public ResponseEntity<AuthUser> registerNewUser(@RequestBody @Valid AuthUser user) {
         return ResponseEntity.ok(authUserService.registerNewUser(user));
+    }
+
+    @PutMapping("/confirm/{email}/{hash}")
+    public ResponseEntity<AuthUser> confirmEmailByHash(@PathVariable String email, @PathVariable String hash) {
+        return ResponseEntity.ok(authUserService.confirmEmail(email, hash));
     }
 }

@@ -5,12 +5,14 @@ import com.github.gustavovitor.integracoes_api.api.repository.permission.Permiss
 import com.github.gustavovitor.integracoes_api.api.repository.auth_user.AuthUserRepository;
 import com.github.gustavovitor.integracoes_api.api.domain.auth_user.AuthUser;
 import com.github.gustavovitor.integracoes_api.api.repository.auth_user.specification.AuthUserSpecification;
+import com.github.gustavovitor.integracoes_api.api.service.auth_user.events.AuthUserCreatedEvent;
 import com.github.gustavovitor.integracoes_api.api.service.auth_user.exceptions.AuthUserAlreadyConfirmedException;
 import com.github.gustavovitor.integracoes_api.api.service.auth_user.exceptions.InvalidAuthUserConfirmationHashException;
 import com.github.gustavovitor.integracoes_api.api.service.auth_user.exceptions.UserAlreadyRegisteredException;
 import com.github.gustavovitor.maker.service.ServiceMaker;
 import com.github.gustavovitor.util.MessageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,9 @@ import java.util.UUID;
 public class AuthUserService extends ServiceMaker<AuthUserRepository, AuthUser, Long, AuthUser, AuthUserSpecification> {
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @Autowired
     private PermissionRepository permissionRepository;
@@ -42,7 +47,10 @@ public class AuthUserService extends ServiceMaker<AuthUserRepository, AuthUser, 
         setDefaultUserPermissions(userToRegister);
         userToRegister.setEmailConfirmationHash(UUID.randomUUID().toString());
         userToRegister.setEmailConfirmed(false);
-        return this.insert(userToRegister);
+        AuthUser savedAuthUser = this.insert(userToRegister);
+
+        applicationEventPublisher.publishEvent(new AuthUserCreatedEvent(this, savedAuthUser));
+        return savedAuthUser;
     }
 
     public AuthUser confirmEmail(String email, String hash) {

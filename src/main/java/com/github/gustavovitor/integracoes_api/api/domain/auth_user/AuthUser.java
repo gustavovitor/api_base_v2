@@ -1,5 +1,6 @@
 package com.github.gustavovitor.integracoes_api.api.domain.auth_user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -41,6 +42,7 @@ public class AuthUser implements Serializable {
 
     @NotNull
     @Size(min = 3, max = 256)
+    @JsonIgnore
     private String pass;
 
     @ManyToMany(fetch = FetchType.EAGER)
