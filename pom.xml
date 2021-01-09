@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.github.gustavovitor</groupId>
-    <artifactId>integracoes-api</artifactId>
+    <artifactId>api_base</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>Integrações API</name>
-    <description>API de integrações.</description>
+    <name>API Base</name>
+    <description>API base.</description>
 
     <properties>
         <java.version>11</java.version>
