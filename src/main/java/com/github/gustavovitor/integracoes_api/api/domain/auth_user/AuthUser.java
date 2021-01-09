@@ -33,6 +33,12 @@ public class AuthUser implements Serializable {
     @NotNull
     private String email;
 
+    @Column(name = "email_confirmed", nullable = false)
+    private Boolean emailConfirmed = false;
+
+    @Column(name = "email_confirmation_hash", nullable = false)
+    private String emailConfirmationHash;
+
     @NotNull
     @Size(min = 3, max = 256)
     private String pass;

@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/user")
-public class AuthUserResource {
+@RequestMapping("/public/user")
+public class PublicAuthUserResource {
 
     @Autowired
     private AuthUserService authUserService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthUser> registerUser(@RequestBody @Valid  AuthUser user) {
-        return ResponseEntity.ok(authUserService.insert(user));
+    public ResponseEntity<AuthUser> registerNewUser(@RequestBody @Valid AuthUser user) {
+        return ResponseEntity.ok(authUserService.registerNewUser(user));
     }
 }

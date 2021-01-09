@@ -8,6 +8,8 @@ CREATE TABLE security.users (
   "username" VARCHAR(128) NOT NULL,
   email VARCHAR(256) NOT NULL,
   pass VARCHAR(128) NOT NULL,
+  email_confirmed BOOLEAN NOT NULL DEFAULT FALSE,
+  email_confirmation_hash VARCHAR(64) NOT NULL,
   CONSTRAINT users_pkey PRIMARY KEY (id),
   CONSTRAINT users_ukey UNIQUE ("username"),
   CONSTRAINT users_email_ukey UNIQUE (email)
@@ -36,7 +38,7 @@ INSERT INTO security.permissions_list (description) VALUES ('READ_USERS');
 INSERT INTO security.permissions_list (description) VALUES ('WRITE_USERS');
 INSERT INTO security.permissions_list (description) VALUES ('DELETE_USERS');
 
-INSERT INTO security.users ("username", email, pass) VALUES ('admin', 'admin@admin.com', '$2a$10$1jH42s1Czqzj/erhy0iFA.nMRqqpcs3WBn8mC10Pev.Dkx9ZeHOzK');
+INSERT INTO security.users ("username", email, pass, email_confirmed, email_confirmation_hash) VALUES ('admin', 'admin@admin.com', '$2a$10$1jH42s1Czqzj/erhy0iFA.nMRqqpcs3WBn8mC10Pev.Dkx9ZeHOzK', true, '-1');
 
 INSERT INTO security.users_permissions (user_id, permission_id) VALUES (1, 1);
 INSERT INTO security.users_permissions (user_id, permission_id) VALUES (1, 2);
