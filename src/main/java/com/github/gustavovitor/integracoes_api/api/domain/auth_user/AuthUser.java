@@ -1,6 +1,7 @@
 package com.github.gustavovitor.integracoes_api.api.domain.auth_user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -26,9 +27,9 @@ public class AuthUser implements Serializable {
     private Long id;
 
     @NotNull
-    @Size(min = 3, max = 128)
-    @Column(name = "username")
-    private String user;
+    @Size(min = 3, max = 64)
+    @Column(name = "full_name")
+    private String fullName;
 
     @Email
     @NotNull
@@ -45,7 +46,7 @@ public class AuthUser implements Serializable {
 
     @NotNull
     @Size(min = 3, max = 256)
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String pass;
 
     @ManyToMany(fetch = FetchType.EAGER)

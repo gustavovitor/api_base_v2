@@ -17,7 +17,7 @@ public class SystemUser extends User {
      * extende ou é um {@link com.github.gustavovitor.integracoes_api.api.service.app_user_details.AppUserDetailsService}.
      * */
     public SystemUser(AuthUser user, Collection<? extends GrantedAuthority> authorities) {
-        super(user.getUser(), user.getPass(), authorities);
+        super(user.getEmail(), user.getPass(), authorities);
         this.authUser = user;
     }
 }
