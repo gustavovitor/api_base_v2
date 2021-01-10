@@ -27,7 +27,7 @@ public class AppUserDetailsService implements UserDetailsService {
      * @return UserDetails com o usuário/permissões atrelados. */
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        AuthUser user = authUserRepository.findByUserAndEmailConfirmed(s, true).orElseThrow(() -> new UsernameNotFoundException("Usuário e/ou senha inválido(a)."));
+        AuthUser user = authUserRepository.findByEmailAndEmailConfirmed(s, true).orElseThrow(() -> new UsernameNotFoundException("Usuário e/ou senha inválido(a)."));
         return new SystemUser(user, getPermissoes(user));
     }
 

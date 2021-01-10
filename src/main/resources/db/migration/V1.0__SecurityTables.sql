@@ -10,6 +10,7 @@ CREATE TABLE security.users (
   pass VARCHAR(128) NOT NULL,
   email_confirmed BOOLEAN NOT NULL DEFAULT FALSE,
   email_confirmation_hash VARCHAR(64) NOT NULL,
+  forget_password_hash VARCHAR(64),
   CONSTRAINT users_pkey PRIMARY KEY (id),
   CONSTRAINT users_ukey UNIQUE ("username"),
   CONSTRAINT users_email_ukey UNIQUE (email)

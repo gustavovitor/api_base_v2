@@ -1,8 +1,10 @@
-package com.github.gustavovitor.integracoes_api.core.handlers;
+package com.github.gustavovitor.integracoes_api.api.service.auth_user.exception_handler;
 
 import com.github.gustavovitor.integracoes_api.api.service.auth_user.exceptions.AuthUserAlreadyConfirmedException;
 import com.github.gustavovitor.integracoes_api.api.service.auth_user.exceptions.InvalidAuthUserConfirmationHashException;
+import com.github.gustavovitor.integracoes_api.api.service.auth_user.exceptions.InvalidForgetPasswordHashException;
 import com.github.gustavovitor.integracoes_api.api.service.auth_user.exceptions.UserAlreadyRegisteredException;
+import com.github.gustavovitor.integracoes_api.core.handlers.APIExceptionHandler;
 import com.github.gustavovitor.integracoes_api.core.handlers.error.APIError;
 import com.github.gustavovitor.integracoes_api.core.handlers.error.ErrorHandler;
 import com.github.gustavovitor.util.MessageUtil;
@@ -36,6 +38,13 @@ public class AuthUserHandler extends APIExceptionHandler {
     @ExceptionHandler({UserAlreadyRegisteredException.class})
     public ResponseEntity<Object> userAlreadyRegisteredException(UserAlreadyRegisteredException ex, WebRequest request) {
         String mensagem = MessageUtil.getMessage("user.already.registered.exception");
+        List<ErrorHandler> erros = Collections.singletonList(new ErrorHandler(mensagem, ex.toString()));
+        return handleExceptionInternal(ex, new APIError(erros.size(), erros), new HttpHeaders(), HttpStatus.CONFLICT, request);
+    }
+
+    @ExceptionHandler({InvalidForgetPasswordHashException.class})
+    public ResponseEntity<Object> invalidForgetPasswordHashException(InvalidForgetPasswordHashException ex, WebRequest request) {
+        String mensagem = MessageUtil.getMessage("invalid.forget.password.exception");
         List<ErrorHandler> erros = Collections.singletonList(new ErrorHandler(mensagem, ex.toString()));
         return handleExceptionInternal(ex, new APIError(erros.size(), erros), new HttpHeaders(), HttpStatus.CONFLICT, request);
     }

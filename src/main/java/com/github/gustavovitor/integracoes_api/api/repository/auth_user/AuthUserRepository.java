@@ -8,6 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface AuthUserRepository extends RepositoryMaker<AuthUser, Long> {
-    Optional<AuthUser> findByUserAndEmailConfirmed(String email, Boolean emailConfirmed);
+    Optional<AuthUser> findByEmailAndEmailConfirmed(String email, Boolean emailConfirmed);
     Optional<AuthUser> findByEmail(String email);
 }

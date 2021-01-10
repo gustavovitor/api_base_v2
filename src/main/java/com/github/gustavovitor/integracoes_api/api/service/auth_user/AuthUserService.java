@@ -6,8 +6,11 @@ import com.github.gustavovitor.integracoes_api.api.repository.auth_user.AuthUser
 import com.github.gustavovitor.integracoes_api.api.domain.auth_user.AuthUser;
 import com.github.gustavovitor.integracoes_api.api.repository.auth_user.specification.AuthUserSpecification;
 import com.github.gustavovitor.integracoes_api.api.service.auth_user.events.AuthUserCreatedEvent;
+import com.github.gustavovitor.integracoes_api.api.service.auth_user.events.ForgetPasswordEvent;
+import com.github.gustavovitor.integracoes_api.api.service.auth_user.events.PasswordChangeEvent;
 import com.github.gustavovitor.integracoes_api.api.service.auth_user.exceptions.AuthUserAlreadyConfirmedException;
 import com.github.gustavovitor.integracoes_api.api.service.auth_user.exceptions.InvalidAuthUserConfirmationHashException;
+import com.github.gustavovitor.integracoes_api.api.service.auth_user.exceptions.InvalidForgetPasswordHashException;
 import com.github.gustavovitor.integracoes_api.api.service.auth_user.exceptions.UserAlreadyRegisteredException;
 import com.github.gustavovitor.maker.service.ServiceMaker;
 import com.github.gustavovitor.util.MessageUtil;
@@ -20,6 +23,8 @@ import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static java.util.Objects.isNull;
 
 @Service
 public class AuthUserService extends ServiceMaker<AuthUserRepository, AuthUser, Long, AuthUser, AuthUserSpecification> {
@@ -53,9 +58,31 @@ public class AuthUserService extends ServiceMaker<AuthUserRepository, AuthUser, 
         return savedAuthUser;
     }
 
-    public AuthUser confirmEmail(String email, String hash) {
-        AuthUser authUser = getRepository().findByEmail(email)
+    public void forgetPassword(String email) {
+        AuthUser authUser = findByEmail(email);
+        authUser.setForgetPasswordHash(UUID.randomUUID().toString());
+        authUser = getRepository().save(authUser);
+        applicationEventPublisher.publishEvent(new ForgetPasswordEvent(this, authUser));
+    }
+
+    public void changePassword(String email, String hash, String password) {
+        AuthUser authUser = findByEmail(email);
+        if (isNull(authUser.getForgetPasswordHash()) || !authUser.getForgetPasswordHash().equals(hash)) {
+            throw new InvalidForgetPasswordHashException();
+        }
+        authUser.setForgetPasswordHash(null);
+        authUser.setPass(encoder.encode(password));
+        getRepository().save(authUser);
+        applicationEventPublisher.publishEvent(new PasswordChangeEvent(this, authUser));
+    }
+
+    public AuthUser findByEmail(String email) {
+        return getRepository().findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException(MessageUtil.getMessage("auth.user.not.found.by.email")));
+    }
+
+    public AuthUser confirmEmail(String email, String hash) {
+        AuthUser authUser = findByEmail(email);
 
         if (!authUser.getEmailConfirmationHash().equals(hash)) {
             throw new InvalidAuthUserConfirmationHashException();

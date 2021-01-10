@@ -40,6 +40,9 @@ public class AuthUser implements Serializable {
     @Column(name = "email_confirmation_hash", nullable = false)
     private String emailConfirmationHash;
 
+    @Column(name = "forget_password_hash")
+    private String forgetPasswordHash;
+
     @NotNull
     @Size(min = 3, max = 256)
     @JsonIgnore
