@@ -1,7 +1,6 @@
 package com.github.gustavovitor.integracoes_api.api.service.auth_user.events;
 
 import com.github.gustavovitor.integracoes_api.api.domain.auth_user.AuthUser;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 
